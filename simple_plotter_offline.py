@@ -50,7 +50,7 @@ def create_layout(title_, title_x, title_y):
 		        titlefont=dict(
 		            family='Arial, sans-serif',
 		            size=18,
-		            color='red'
+		            color='black'
 		        ),
 		        showticklabels=True,
 		        tickangle=45,
@@ -65,17 +65,6 @@ def create_layout(title_, title_x, title_y):
 		)
 	return layout_
 
-# def create_trace(x_data_, y_data_, meanDivideY_, name_):	
-# 	y_data__ = y_data_
-# 	if meanDivideY_==1 :
-# 		y_data__ = y_data_/y_data_.mean()
-
-# 	trace_ = go.Scatter(
-# 	                    x=x_data_, y=y_data__, # Data
-# 	                    name=name_ # Additional options                
-# 	                    )
-# 	return trace_
-
 def create_trace(x_data_, y_data_, meanDivideY_, name_):	
 	y_data__ = y_data_
 	if meanDivideY_==1 :
@@ -83,11 +72,60 @@ def create_trace(x_data_, y_data_, meanDivideY_, name_):
 
 	trace_ = go.Scatter(
 	                    x=x_data_, y=y_data__, # Data
-	                    name=name_, # Additional options                
-	                    mode = 'markers'
-
+	                    name=name_ # Additional options                
 	                    )
 	return trace_
+
+
+def create_trace_band_lower(x_data_, y_data_, meanDivideY_, name_):	
+	y_data__ = y_data_
+	if meanDivideY_==1 :
+		y_data__ = y_data_/y_data_.mean()
+
+
+	trace_ = go.Scatter(
+	                    x=x_data_, y=y_data__, # Data
+	                    name=name_,# Additional options                
+					    mode='lines',
+					    marker=dict(color="444"),
+					    line=dict(width=0),
+					    fillcolor='rgba(68, 68, 68, 0.3)',
+					    fill='tonexty')
+	return trace_
+
+
+
+def create_trace_band_upper(x_data_, y_data_, meanDivideY_, name_):	
+	y_data__ = y_data_
+	if meanDivideY_==1 :
+		y_data__ = y_data_/y_data_.mean()
+
+	trace_ = go.Scatter(
+	                    x=x_data_, y=y_data__, # Data
+	                    name=name_,# Additional options                
+					    marker=dict(color="444"),
+					    line=dict(width=0),
+					    mode='lines',    showlegend=False)
+	return trace_
+
+
+
+
+
+# 	return trace_
+
+# def create_trace(x_data_, y_data_, meanDivideY_, name_):	
+# 	y_data__ = y_data_
+# 	if meanDivideY_==1 :
+# 		y_data__ = y_data_/y_data_.mean()
+
+# 	trace_ = go.Scatter(
+# 	                    x=x_data_, y=y_data__, # Data
+# 	                    name=name_, # Additional options                
+# 	                    mode = 'markers'
+
+# 	                    )
+# 	return trace_
 
 
 def create_figure(x_data_s, y_data_s, meanDivideY_, name_s, title_, title_x, title_y):
@@ -104,8 +142,24 @@ def create_figure(x_data_s, y_data_s, meanDivideY_, name_s, title_, title_x, tit
 
 
 
+def create_figure_withErrorBands(x_data_s, y_data_s, meanDivideY_, name_s, title_, title_x, title_y):
+	layout_=create_layout(title_, title_x, title_y)
+	data_ = []
+	for y_ in range(0, len(y_data_s)):
+		if y_ == 0 or y_==1:
+			tr_ = create_trace(x_data_s[y_], y_data_s[y_], meanDivideY_, name_s[y_])
+			data_.append(tr_.copy())	
+		elif y_==2:
+			tr_ = create_trace_band_upper(x_data_s[y_], y_data_s[y_], meanDivideY_, name_s[y_])
+			data_.append(tr_.copy())	
+		elif y_==3:
+			tr_ = create_trace_band_lower(x_data_s[y_], y_data_s[y_], meanDivideY_, name_s[y_])
+			data_.append(tr_.copy())	
 
+	#fig_ = go.Figure(data=data_,layout=layout_)
+	fig_ = go.Figure(data=data_,layout=layout_)
 
+	return fig_
 
 
 
